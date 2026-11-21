@@ -1,0 +1,94 @@
+name: Release
+# Publishing a release on git.borodutch.com (tag vX.Y.Z matching manifest.json) attaches the zip to the Forgejo and
+# GitHub releases and submits it to the Chrome Web Store and Firefox Add-ons. Set the repo variable
+# STORE_CHROME_PAUSED or STORE_FIREFOX_PAUSED to true to skip a store.
+on:
+  release:
+    types: [published]
+permissions:
+  contents: read
+concurrency:
+  group: release # stores have one review slot
+jobs:
+  assets:
+    if: ${{ !github.event.release.prerelease && !github.event.release.draft }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - run: scripts/package.sh "$TAG"
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+      - name: Attach the zip to the Forgejo release
+        env:
+          TOKEN: ${{ github.token }}
+          ASSETS: ${{ github.server_url }}/api/v1/repos/${{ github.repository }}/releases/${{ github.event.release.id }}/assets
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          cp hideaireplies.zip "hideaireplies-${TAG#v}.zip"
+          for f in hideaireplies.zip "hideaireplies-${TAG#v}.zip"; do
+            curl -fsS -H "Authorization: token $TOKEN" -F "attachment=@$f" "$ASSETS?name=$f" >/dev/null
+          done
+      # Releases don't mirror; the site's download link points at the GitHub release.
+      - name: Publish the same release on GitHub once the tag has mirrored
+        env:
+          GH_TOKEN: ${{ secrets.GH_MIRROR_TOKEN }}
+          REPO: ${{ github.repository }}
+          TAG: ${{ github.event.release.tag_name }}
+          NOTES: ${{ github.event.release.body }}
+          SHA: ${{ github.sha }}
+        run: |
+          for _ in $(seq 30); do
+            test "$(gh api "repos/$REPO/commits/$TAG" --jq .sha 2>/dev/null)" = "$SHA" && break
+            sleep 10
+          done
+          test "$(gh api "repos/$REPO/commits/$TAG" --jq .sha)" = "$SHA" || { echo "GitHub tag $TAG is not at $SHA; check the push mirror"; exit 1; }
+          gh release view "$TAG" --repo "$REPO" >/dev/null 2>&1 || gh release create "$TAG" --repo "$REPO" --verify-tag --title "$TAG" --notes "$NOTES"
+          gh release upload "$TAG" --repo "$REPO" --clobber hideaireplies.zip "hideaireplies-${TAG#v}.zip"
+  chrome:
+    if: ${{ !github.event.release.prerelease && !github.event.release.draft && vars.STORE_CHROME_PAUSED != 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    enable-openid-connect: true # Google WIF admits only release runs of this workflow on v* tags
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - run: scripts/package.sh "$TAG"
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+      - id: google
+        uses: google-github-actions/auth@ba79af03959ebeac9769e648f473a284504d9193 # v2.1.10
+        with:
+          workload_identity_provider: ${{ vars.GOOGLE_WIF_PROVIDER }}
+          service_account: ${{ vars.CHROME_GOOGLE_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/chromewebstore
+          create_credentials_file: false
+          export_environment_variables: false
+      - run: python3 scripts/publish.py chrome "${TAG#v}"
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          GOOGLE_ACCESS_TOKEN: ${{ steps.google.outputs.access_token }}
+          CHROME_PUBLISHER_ID: ${{ vars.CHROME_PUBLISHER_ID }}
+          CHROME_ITEM_ID: ${{ vars.CHROME_ITEM_ID }}
+  firefox:
+    if: ${{ !github.event.release.prerelease && !github.event.release.draft && vars.STORE_FIREFOX_PAUSED != 'true' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - run: scripts/package.sh "$TAG"
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+      - run: python3 scripts/publish.py firefox "${TAG#v}"
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}

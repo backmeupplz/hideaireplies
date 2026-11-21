@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hide AI Replies</title>
+<meta name="description" content="A free Chrome and Firefox extension that hides posts, replies, reposts and likes from AI reply bots on X, using the public blockedforaireply.levels.io list.">
+<link rel="canonical" href="https://hideaireplies.borodutch.com/">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hide AI Replies">
+<meta property="og:title" content="Hide AI Replies">
+<meta property="og:description" content="A free Chrome and Firefox extension that hides AI reply bots on X, using the public blockedforaireply.levels.io list.">
+<meta property="og:url" content="https://hideaireplies.borodutch.com/">
+<meta property="og:image" content="https://hideaireplies.borodutch.com/og.png?v=1">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Hide AI Replies">
+<meta name="twitter:description" content="A free Chrome and Firefox extension that hides AI reply bots on X, using the public blockedforaireply.levels.io list.">
+<meta name="twitter:image" content="https://hideaireplies.borodutch.com/og.png?v=1">
+<style>
+:root{--bg:#fff;--ink:#0f1419;--sub:#536471;--line:#eff3f4;--accent:#1d9bf0;--red:#f4212e;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#000;--ink:#e7e9ea;--sub:#939ea6;--line:#2f3336;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#000;--ink:#e7e9ea;--sub:#939ea6;--line:#2f3336;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:40rem;margin:auto;padding:48px 16px 64px}
+header{text-align:center;margin-bottom:40px}
+header img{width:88px;height:88px}
+h1{font-size:2.4rem;letter-spacing:-.03em;line-height:1.1;margin:16px 0 12px}
+h2{font-size:1.3rem;margin:40px 0 12px}
+p,li{color:var(--sub)}
+strong{color:var(--ink)}
+a{color:var(--accent)}
+.buttons{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:24px}
+.button{display:inline-flex;align-items:center;min-height:48px;padding:0 22px;border-radius:999px;background:var(--ink);color:var(--bg);font-weight:650;text-decoration:none}
+.button.secondary{background:none;color:var(--ink);border:1px solid var(--line)}
+.note{font-size:.9rem;margin-top:12px}
+ol{padding-left:1.3em}
+li{margin:6px 0}
+code{font-size:.9em;background:var(--line);border-radius:6px;padding:1px 6px;color:var(--ink)}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-size:.9rem;color:var(--sub)}
+</style>
+</head><body><main>
+<header>
+  <img src="icon.svg" alt="">
+  <h1>Hide AI Replies</h1>
+  <p>This free browser extension hides posts, replies, reposts and likes from AI reply bots on X, so the threads you read are written by people again.</p>
+  <div class="buttons">
+    <a class="button" id="chrome" href="#manual">Add to Chrome</a>
+    <a class="button" id="firefox" href="#manual">Add to Firefox</a>
+  </div>
+  <p class="note" id="status">Both store listings are waiting for review. Until they are approved, you can install the extension by hand as described below.</p>
+</header>
+
+<h2>How it works</h2>
+<p>The extension downloads the public list of flagged accounts from <a href="https://blockedforaireply.levels.io/">blockedforaireply.levels.io</a>, which <a href="https://x.com/levelsio">@levelsio</a> and <a href="https://x.com/ryanvogel">@ryanvogel</a> maintain, and refreshes it every six hours. While you browse x.com, it hides every post and reply written by an account on that list, every repost they make, and the rows they appear in on likes and repost lists. A notification is hidden only when every account in it is on the list, so a like from a real person is never swallowed by a bot that liked the same post.</p>
+<p>When you open a flagged account's profile directly, their posts stay visible there, so you can still see what they wrote if you go looking for it.</p>
+
+<h2 id="manual">Install it by hand</h2>
+<p><strong>Chrome, Edge, Brave and Arc:</strong></p>
+<ol>
+  <li>Download <a href="https://github.com/backmeupplz/hideaireplies/releases/latest/download/hideaireplies.zip">hideaireplies.zip</a> and unzip it.</li>
+  <li>Open <code>chrome://extensions</code> and turn on <strong>Developer mode</strong> in the top right corner.</li>
+  <li>Click <strong>Load unpacked</strong> and choose the unzipped folder, then reload x.com.</li>
+</ol>
+<p><strong>Firefox:</strong> Firefox only keeps unsigned extensions until it restarts, so the Firefox Add-ons listing is the way to install it for good. To try it before then, open <code>about:debugging#/runtime/this-firefox</code>, click <strong>Load Temporary Add-on</strong> and pick the <code>manifest.json</code> file inside the unzipped folder.</p>
+
+<h2>Privacy</h2>
+<p>The extension collects nothing and sends nothing anywhere. The only request it makes is to download the public list of usernames, and everything else happens inside your browser.</p>
+
+<footer>
+  <p>The list is a set of judgment calls by its maintainers, not proof that an account is a bot, and this extension is not affiliated with them or with X. If you think an account is listed by mistake, the <a href="https://blockedforaireply.levels.io/">list's site</a> explains how to appeal. The source code is on <a href="https://git.borodutch.com/backmeupplz/hideaireplies">git.borodutch.com</a> and mirrored to <a href="https://github.com/backmeupplz/hideaireplies">GitHub</a>, and the extension is made by <a href="https://borodutch.com">Borodutch</a>.</p>
+</footer>
+</main></body></html>
