@@ -14,8 +14,11 @@ function shouldHide(cell) {
     const actors = [...notification.querySelectorAll(AVATAR)].map(handleOf)
     return actors.length > 0 && actors.every(listed)
   }
+  // Only posts and user rows; other cells (DMs, the reply composer) stay alone.
+  const item = cell.querySelector('article[data-testid="tweet"], [data-testid="UserCell"]')
+  if (!item) return false
   // The first avatar is the author; later ones belong to quoted posts.
-  if (listed(handleOf(cell.querySelector(AVATAR)))) return true
+  if (listed(handleOf(item.querySelector(AVATAR)))) return true
   const repost = cell.querySelector('[data-testid="socialContext"]')?.closest('a')
   return listed(repost?.getAttribute('href')?.slice(1).toLowerCase())
 }

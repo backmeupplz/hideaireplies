@@ -7,7 +7,7 @@ A Chrome and Firefox extension that hides posts, replies, reposts and likes from
 - `extension/` is the whole extension, with no build step: `background.js` downloads the list into `storage.local`, and `content.js` hides every X cell whose author avatar (`UserAvatar-Container-<handle>`) is on it.
 - `docs/` is the site, served by GitHub Pages from the mirror at hideaireplies.borodutch.com (Cloudflare-proxied CNAME).
 - `store/` holds the store images; `scripts/cards.sh` renders them and `docs/og.png` from `store/card.html`.
-- `node test.mjs` tests the list download. The hiding was checked by hand on live X threads.
+- `node test.mjs` tests the list download (CI runs it). `e2e.mjs` loads the real extension into Chromium, waits for the live list and checks the hiding on a fake x.com page; run it before a release (setup line at its top). The selectors were checked by hand on live X threads.
 
 ## Releasing
 
