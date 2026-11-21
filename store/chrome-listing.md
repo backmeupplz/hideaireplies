@@ -5,7 +5,7 @@ Item `lkdinmikhjblbnkgimophmiphciffgdh`, created 2026-11-21 in the [developer da
 1. **New item:** upload `hideaireplies.zip` from the [latest release](https://github.com/backmeupplz/hideaireplies/releases/latest).
 2. **Store listing**
    - Description: paste the text below.
-   - Category: Social & Communication. Language: English.
+   - Category: Social Networking. Language: English.
    - Screenshot: `store/screenshot-1280x800.png`. Small promo tile: `store/promo-440x280.png`.
    - Homepage URL: https://hideaireplies.borodutch.com. Support URL: https://git.borodutch.com/backmeupplz/hideaireplies/issues
 3. **Privacy**
