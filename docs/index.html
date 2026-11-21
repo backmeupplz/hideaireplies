@@ -49,9 +49,9 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-si
   <p>This free browser extension hides posts, replies, reposts and likes from AI reply bots on X, so the threads you read are written by people again.</p>
   <div class="buttons">
     <a class="button" id="chrome" href="#manual">Add to Chrome</a>
-    <a class="button" id="firefox" href="#manual">Add to Firefox</a>
+    <a class="button" id="firefox" href="https://addons.mozilla.org/firefox/addon/hide-ai-replies/">Add to Firefox</a>
   </div>
-  <p class="note" id="status">Both store listings are waiting for review. Until they are approved, you can install the extension by hand as described below.</p>
+  <p class="note" id="status">Both store listings are waiting for review, so the store pages may not open yet. Until they are approved, you can install the extension by hand as described below.</p>
 </header>
 
 <h2>How it works</h2>
@@ -67,7 +67,7 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-si
 </ol>
 <p><strong>Firefox:</strong> Firefox only keeps unsigned extensions until it restarts, so the Firefox Add-ons listing is the way to install it for good. To try it before then, open <code>about:debugging#/runtime/this-firefox</code>, click <strong>Load Temporary Add-on</strong> and pick the <code>manifest.json</code> file inside the unzipped folder.</p>
 
-<h2>Privacy</h2>
+<h2 id="privacy">Privacy</h2>
 <p>The extension collects nothing and sends nothing anywhere. The only request it makes is to download the public list of usernames, and everything else happens inside your browser.</p>
 
 <footer>
