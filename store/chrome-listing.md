@@ -1,6 +1,6 @@
 # Chrome Web Store listing
 
-The first submission is made by hand in the [developer dashboard](https://chrome.google.com/webstore/devconsole) (the API can't create items). After that, every release goes out through CI once the item ID is in the `CHROME_ITEM_ID` repo variable and `STORE_CHROME_PAUSED` is `false`.
+Item `lkdinmikhjblbnkgimophmiphciffgdh`, created 2026-11-21 in the [developer dashboard](https://chrome.google.com/webstore/devconsole) with the values below (the API can't create items or edit the listing). Releases go out through CI. The dashboard blocks extensions and Google refuses sign-in in embedded browsers, so dashboard edits were scripted through a separate Chrome profile with a local debugging port.
 
 1. **New item:** upload `hideaireplies.zip` from the [latest release](https://github.com/backmeupplz/hideaireplies/releases/latest).
 2. **Store listing**
